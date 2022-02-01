@@ -40,9 +40,9 @@ public class UserEntity {
 	private String profileUrl;
 	@Lob
 	private byte[] profile;
-	@OneToMany(mappedBy="user", cascade=CascadeType.PERSIST)
+	@OneToMany(mappedBy="user", cascade=CascadeType.ALL)
 	private List<ConnectionEntity> connections = new ArrayList<>();
-	private Long totalConnections;
+	private long totalConnections;
 	
 //	@Lob
 //	private byte[] cover; 

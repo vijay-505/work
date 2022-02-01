@@ -8,12 +8,14 @@ import com.vijay.LinkedIn.dto.model.ConnectionDto;
 
 public interface ConnectionService {
 
-	ResponseEntity<String> sendInvitation(String email1, String email2);
+	ResponseEntity<String> sendInvitation(String senderEmail, String receiverEmail);
 
 	ResponseEntity<List<ConnectionDto>> viewAllInvitation(String email);
 
-	ResponseEntity<String> acceptInvitation(String email1, String email2);
+	ResponseEntity<String> acceptInvitation(String receiverEmail, String senderEmail);
 
-	ResponseEntity<String> cancelInvitation(String email1, String email2);
+	ResponseEntity<String> cancelInvitation(String receiverEmail, String senderEmail);
+
+	ResponseEntity<String> removeConnection(String senderEmail, String receiverEmail);
 
 }

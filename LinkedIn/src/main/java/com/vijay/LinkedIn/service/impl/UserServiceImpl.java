@@ -22,6 +22,10 @@ import com.vijay.LinkedIn.dto.model.UserDto;
 import com.vijay.LinkedIn.entity.ConnectionEntity;
 import com.vijay.LinkedIn.entity.ConnectionStatus;
 import com.vijay.LinkedIn.entity.UserEntity;
+import com.vijay.LinkedIn.exception.FileErrorException;
+import com.vijay.LinkedIn.exception.FileIOException;
+import com.vijay.LinkedIn.exception.UserAlreadyExistsException;
+import com.vijay.LinkedIn.exception.UserNotFoundException;
 import com.vijay.LinkedIn.repository.ConnectionRepository;
 import com.vijay.LinkedIn.repository.UserRepository;
 import com.vijay.LinkedIn.service.UserService;
@@ -45,7 +49,7 @@ public class UserServiceImpl implements UserService{
 	public ResponseEntity<UserDto> createUser(UserEntity user) {
 		Optional<UserEntity> optionalUser = userRepository.findByEmail(user.getEmail());
 		if(optionalUser.isPresent()) {
-			throw new RuntimeException("user already exist with: "+user.getEmail());
+			throw new UserAlreadyExistsException("user already exist with: "+user.getEmail());
 		}
 		return new ResponseEntity<>(
 				modelMapper.map(userRepository.save(user), UserDto.class), 
@@ -56,7 +60,7 @@ public class UserServiceImpl implements UserService{
 	public ResponseEntity<UserDto> retrieveUser(String email) {
 		Optional<UserEntity> optionalUser = userRepository.findByEmail(email);
 		if(!optionalUser.isPresent()) {
-			throw new RuntimeException("user not exist with: "+email);
+			throw new UserNotFoundException("user not exist with: "+email);
 		}
 		return new ResponseEntity<>(
 				modelMapper.map(optionalUser.get(), UserDto.class), 
@@ -69,20 +73,20 @@ public class UserServiceImpl implements UserService{
 		String email = request.getParameter("email");
 		Optional<UserEntity> optionalUser = userRepository.findByEmail(email);
 		if(!optionalUser.isPresent()) {
-			throw new RuntimeException("user not exist with: "+email);
+			throw new UserNotFoundException("user not exist with: "+email);
 		}
 		UserEntity user = optionalUser.get();
 		user.setName(request.getParameter("name"));
 		user.setAbout(request.getParameter("about"));
 		String contentType = profile.getContentType();
 		if(!contentType.startsWith("image/")) {
-			throw new RuntimeException("it's not an image");
+			throw new FileErrorException("it's not an image");
 		}
 		try {
 			user.setProfile(profile.getBytes());
 //			user.setCover(cover.getBytes());
 		} catch (IOException e) {
-			throw new RuntimeException("problem with updating image");
+			throw new FileIOException("problem with updating image");
 		}
 		String profileUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
 				.path("users/"+user.getEmail()+"/")
@@ -106,7 +110,6 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public ResponseEntity<List<ConnectionDto>> retrieveAllConnection(String email) {
-//		UserEntity user = userRepository.findByEmail(email).get();
 		List<ConnectionEntity> connections = 
 				connectionRepository.findByUserEmailAndStatus(email, ConnectionStatus.ACCEPT);
 		return new ResponseEntity<>(

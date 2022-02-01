@@ -17,19 +17,41 @@ import com.vijay.LinkedIn.util.ExceptionResponse;
 @RestController
 public class CustomizedExceptionHandler extends ResponseEntityExceptionHandler{
 
-	@ExceptionHandler(RuntimeException.class)
-	public final ResponseEntity<Object> handleRuntimeExceptions
+	@ExceptionHandler(UserAlreadyExistsException.class)
+	public final ResponseEntity<Object> handleUserAlreadyExistsException
 	(Exception ex, WebRequest request){
 		
 		ExceptionResponse exceptionResponse = 
 				new ExceptionResponse(ex.getMessage(), 
 				request.getDescription(false));
 		
-		return new ResponseEntity(exceptionResponse,HttpStatus.OK);
+		return new ResponseEntity(exceptionResponse,HttpStatus.CONFLICT);
 	}
 	
-	@ExceptionHandler(Exception.class)
-	public final ResponseEntity<Object> handleAllExceptions
+	@ExceptionHandler(UserNotFoundException.class)
+	public final ResponseEntity<Object> handleUserNotFoundException
+	(Exception ex, WebRequest request){
+		
+		ExceptionResponse exceptionResponse = 
+				new ExceptionResponse(ex.getMessage(), 
+				request.getDescription(false));
+		
+		return new ResponseEntity(exceptionResponse,HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(FileErrorException.class)
+	public final ResponseEntity<Object> handleFileErrorException
+	(Exception ex, WebRequest request){
+		
+		ExceptionResponse exceptionResponse = 
+				new ExceptionResponse(ex.getMessage(), 
+				request.getDescription(false));
+		
+		return new ResponseEntity(exceptionResponse,HttpStatus.NOT_ACCEPTABLE);
+	}
+	
+	@ExceptionHandler(FileIOException.class)
+	public final ResponseEntity<Object> handleFileIOException
 	(Exception ex, WebRequest request){
 		
 		ExceptionResponse exceptionResponse = 
@@ -38,6 +60,28 @@ public class CustomizedExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		return new ResponseEntity(exceptionResponse,HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
+//	@ExceptionHandler(RuntimeException.class)
+//	public final ResponseEntity<Object> handleRuntimeExceptions
+//	(Exception ex, WebRequest request){
+//		
+//		ExceptionResponse exceptionResponse = 
+//				new ExceptionResponse(ex.getMessage(), 
+//				request.getDescription(false));
+//		
+//		return new ResponseEntity(exceptionResponse,HttpStatus.OK);
+//	}
+//	
+//	@ExceptionHandler(Exception.class)
+//	public final ResponseEntity<Object> handleAllExceptions
+//	(Exception ex, WebRequest request){
+//		
+//		ExceptionResponse exceptionResponse = 
+//				new ExceptionResponse(ex.getMessage(), 
+//				request.getDescription(false));
+//		
+//		return new ResponseEntity(exceptionResponse,HttpStatus.INTERNAL_SERVER_ERROR);
+//	}
 	
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(
