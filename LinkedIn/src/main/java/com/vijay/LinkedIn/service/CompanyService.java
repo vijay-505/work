@@ -6,14 +6,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.vijay.LinkedIn.dto.model.CompanyDto;
-import com.vijay.LinkedIn.entity.CompanyEntity;
+import com.vijay.LinkedIn.dto.model.CompanyRequestDto;
 
 public interface CompanyService {
 
-	ResponseEntity<CompanyDto> createCompany(CompanyEntity company);
+	ResponseEntity<CompanyDto> createCompany(CompanyRequestDto companyRequestDto);
 
 	ResponseEntity<CompanyDto> retrieveCompany(String email);
 
-	ResponseEntity<CompanyDto> updateCompany(MultipartFile profile, HttpServletRequest request);
+	ResponseEntity<CompanyDto> updateCompany(MultipartFile profile, String email, HttpServletRequest request);
+
+	ResponseEntity<byte[]> checkProfile(String email, HttpServletRequest request);
 
 }

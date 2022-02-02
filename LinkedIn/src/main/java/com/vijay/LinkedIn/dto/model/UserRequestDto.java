@@ -12,8 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserRequestDto {
 	
-	@NotNull
 	@Email
+	@NotNull
 	private String email;
 	@NotNull
 	private String password;

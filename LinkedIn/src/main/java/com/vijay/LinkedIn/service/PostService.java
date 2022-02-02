@@ -13,7 +13,7 @@ public interface PostService {
 	
 	ResponseEntity<List<PostDto>> retrieveALLPost(String email);
 
-	ResponseEntity<PostDto> retrievePost(String email, int postId);
+	ResponseEntity<PostDto> retrievePost(int postId);
 
 	ResponseEntity<PostDto> updatePost(PostRequestDto postRequestDto, 
 			String email, int postId);

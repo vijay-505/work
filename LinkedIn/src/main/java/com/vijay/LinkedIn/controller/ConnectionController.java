@@ -27,7 +27,7 @@ public class ConnectionController {
 		
 	}
 	
-	@GetMapping("connections/{email}")
+	@GetMapping("connections/{email}/request")
 	public ResponseEntity<List<ConnectionDto>> viewAllInvitation(
 			@PathVariable String email) {
 		return connectionService.viewAllInvitation(email);
@@ -46,9 +46,15 @@ public class ConnectionController {
 		return connectionService.cancelInvitation(receiverEmail, senderEmail);
 	}
 	
-	@DeleteMapping("connections/{senderEmail}/{receiverEmail}/remove")
+	@DeleteMapping("connections/{senderEmail}/{receiverEmail}")
 	public ResponseEntity<String> removeConnection(@PathVariable String senderEmail,
 			@PathVariable String receiverEmail) {
 		return connectionService.removeConnection(senderEmail, receiverEmail);
+	}
+	
+	@GetMapping("connections/{email}")
+	public  ResponseEntity<List<ConnectionDto>> retrieveAllConnection(
+			@PathVariable String email){
+		return connectionService.retrieveAllConnection(email);
 	}
 }

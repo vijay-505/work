@@ -93,8 +93,8 @@ public class ConnectionServiceImpl implements ConnectionService{
 			String receiverEmail, String senderEmail) {
 		ConnectionEntity connection = connectionRepository 
 				.findByConnectionEmailAndUserEmail(senderEmail,receiverEmail);
-		connection.setStatus(ConnectionStatus.CANCEL);
-		connectionRepository.save(connection);
+//		connection.setStatus(ConnectionStatus.CANCEL);
+//		connectionRepository.save(connection);
 		connectionRepository.delete(connection);
 		return new ResponseEntity<>("Connection request cancel.",HttpStatus.OK);
 	}
@@ -103,15 +103,26 @@ public class ConnectionServiceImpl implements ConnectionService{
 	public ResponseEntity<String> removeConnection(String senderEmail, String receiverEmail) {
 		ConnectionEntity senderConnection = connectionRepository 
 				.findByConnectionEmailAndUserEmail(receiverEmail,senderEmail);
-		ConnectionEntity receiverConnection = connectionRepository 
-				.findByConnectionEmailAndUserEmail(senderEmail,receiverEmail);
 		UserEntity senderUser = userRepository.findByEmail(senderEmail).get();
-		UserEntity receiverUser = userRepository.findByEmail(senderEmail).get();
 		senderUser.setTotalConnections(senderUser.getTotalConnections()-1L);
 		connectionRepository.delete(senderConnection);
+		
+		ConnectionEntity receiverConnection = connectionRepository 
+				.findByConnectionEmailAndUserEmail(senderEmail,receiverEmail);
+		UserEntity receiverUser = userRepository.findByEmail(receiverEmail).get();
 		receiverUser.setTotalConnections(receiverUser.getTotalConnections()-1L);
 		connectionRepository.delete(receiverConnection);
+		
 		return new ResponseEntity<>("Connection removed.",HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<List<ConnectionDto>> retrieveAllConnection(String email) {
+		List<ConnectionEntity> connections = 
+				connectionRepository.findByUserEmailAndStatus(email, ConnectionStatus.ACCEPT);
+		return new ResponseEntity<>(
+				connectionMapper.toConnectionDtos(connections), 
+				HttpStatus.OK);
 	}
 
 }

@@ -1,5 +1,8 @@
 package com.vijay.LinkedIn.dto.model;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,13 +10,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CompanyDto {
+public class CompanyRequestDto {
 	
-	private int id;
+	@NotNull
+	@Email
 	private String email;
+	@NotNull
+	private String password;
+	@NotNull
 	private String name;
-	private String profileUrl;
-	private String profileImageUrl;
 	private String about;
 
 }

@@ -46,6 +46,15 @@ public class PostServiceImpl implements PostService{
 		post.setUser(userRepository.findByEmail(email).get());
 		post.setCreatedDate(new Date());
 		postRepository.save(post);
+
+		String likesUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+				.path("posts/"+post.getPostId()+"/likes")
+				.toUriString();
+		post.setLikesUrl(likesUrl);
+		String commentUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+				.path("posts/"+post.getPostId()+"/comments")
+				.toUriString();
+		post.setCommentsUrl(commentUrl);
 		List<LinkEntity> links = post.getLinks();
 		for(String user: postRequestDto.getUsers()) {
 			String profileUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -70,7 +79,7 @@ public class PostServiceImpl implements PostService{
 	}
 
 	@Override
-	public ResponseEntity<PostDto> retrievePost(String email, int postId) {
+	public ResponseEntity<PostDto> retrievePost(int postId) {
 		PostEntity post = postRepository.getById(postId);
 		return new ResponseEntity<>(
 				modelMapper.map(post, PostDto.class),HttpStatus.OK);

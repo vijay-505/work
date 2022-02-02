@@ -1,11 +1,9 @@
 package com.vijay.LinkedIn.service.impl;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,18 +15,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.vijay.LinkedIn.dto.mapper.ConnectionMapper;
-import com.vijay.LinkedIn.dto.model.ConnectionDto;
 import com.vijay.LinkedIn.dto.model.UserDto;
 import com.vijay.LinkedIn.dto.model.UserRequestDto;
-import com.vijay.LinkedIn.entity.ConnectionEntity;
-import com.vijay.LinkedIn.entity.ConnectionStatus;
 import com.vijay.LinkedIn.entity.UserEntity;
 import com.vijay.LinkedIn.exception.FileErrorException;
 import com.vijay.LinkedIn.exception.FileIOException;
 import com.vijay.LinkedIn.exception.UserAlreadyExistsException;
 import com.vijay.LinkedIn.exception.UserNotFoundException;
-import com.vijay.LinkedIn.repository.ConnectionRepository;
 import com.vijay.LinkedIn.repository.UserRepository;
 import com.vijay.LinkedIn.service.UserService;
 
@@ -39,13 +32,8 @@ public class UserServiceImpl implements UserService{
 	private UserRepository userRepository;
 	
 	@Autowired
-	private ConnectionRepository connectionRepository;
-	
-	@Autowired
 	private ModelMapper modelMapper;
-	
-	@Autowired
-	private ConnectionMapper connectionMapper;
+
 
 	@Override
 	public ResponseEntity<UserDto> createUser(UserRequestDto userRequestDto) {
@@ -76,8 +64,8 @@ public class UserServiceImpl implements UserService{
 
 
 	@Override
-	public ResponseEntity<UserDto> updateUser(MultipartFile profile, HttpServletRequest request) {
-		String email = request.getParameter("email");
+	public ResponseEntity<UserDto> updateUser(MultipartFile profile, 
+			String email, HttpServletRequest request) {
 		Optional<UserEntity> optionalUser = userRepository.findByEmail(email);
 		if(!optionalUser.isPresent()) {
 			throw new UserNotFoundException("user not exist with: "+email);
@@ -114,18 +102,5 @@ public class UserServiceImpl implements UserService{
 				.header(HttpHeaders.CONTENT_DISPOSITION, "inline;fileName="+"profile") 
 				.body(user.getProfile());
 	}
-
-	@Override
-	public ResponseEntity<List<ConnectionDto>> retrieveAllConnection(String email) {
-		List<ConnectionEntity> connections = 
-				connectionRepository.findByUserEmailAndStatus(email, ConnectionStatus.ACCEPT);
-		return new ResponseEntity<>(
-				connectionMapper.toConnectionDtos(connections), 
-				HttpStatus.OK);
-	}
-
-
-
-	
 
 }

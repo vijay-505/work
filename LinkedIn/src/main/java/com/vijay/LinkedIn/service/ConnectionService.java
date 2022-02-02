@@ -18,4 +18,6 @@ public interface ConnectionService {
 
 	ResponseEntity<String> removeConnection(String senderEmail, String receiverEmail);
 
+	ResponseEntity<List<ConnectionDto>> retrieveAllConnection(String email);
+
 }

@@ -22,24 +22,23 @@ public class PostController {
 	@Autowired
 	private PostService postService;
 	
-	@PostMapping("/users/{email}/posts")
+	@PostMapping("/posts/users/{email}")
 	public ResponseEntity<PostDto> createPost(@RequestBody PostRequestDto postRequestDto,
 			@PathVariable String email){
 		return postService.createPost(postRequestDto, email);
 	}
 	
-	@GetMapping("/users/{email}/posts")
+	@GetMapping("/posts/users/{email}")
 	public ResponseEntity<List<PostDto>> retrieveAllPost(@PathVariable String email){
 		return postService.retrieveALLPost(email);
 	}
 	
-	@GetMapping("/users/{email}/posts/{postId}")
-	public ResponseEntity<PostDto> retrievePost(@PathVariable String email,
-			@PathVariable int postId){
-		return postService.retrievePost(email, postId);
+	@GetMapping("/posts/{postId}")
+	public ResponseEntity<PostDto> retrievePost(@PathVariable int postId){
+		return postService.retrievePost(postId);
 	}
 	
-	@PutMapping("/users/{email}/posts/{postId}")
+	@PutMapping("/posts/{postId}/users/{email}")
 	public ResponseEntity<PostDto> updatePost(
 			@RequestBody PostRequestDto postRequestDto,
 			@PathVariable String email,
@@ -47,7 +46,7 @@ public class PostController {
 		return postService.updatePost(postRequestDto, email, postId);
 	}
 	
-	@DeleteMapping("/users/{email}/posts/{postId}")
+	@DeleteMapping("/posts/{postId}/users/{email}")
 	public ResponseEntity<String> deletePost(@PathVariable String email,
 			@PathVariable int postId){
 		return postService.deletePost(email, postId);

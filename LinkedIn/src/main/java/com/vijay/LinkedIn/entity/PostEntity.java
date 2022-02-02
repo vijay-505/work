@@ -32,6 +32,10 @@ public class PostEntity {
 	private Date createdDate;
 	private Date updatedDate;
 	private String description;
+	private long totalLikes;
+	private String likesUrl;
+	private long totalComments;
+	private String commentsUrl;
 	
 	@OneToMany(mappedBy="post",cascade=CascadeType.REMOVE)
 	private List<LinkEntity> links = new ArrayList<>();;

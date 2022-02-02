@@ -3,6 +3,7 @@ package com.vijay.LinkedIn.entity;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -27,10 +28,10 @@ public class LikeEntity {
 	@Enumerated(EnumType.STRING)
 	private React react;
 	
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	private PostEntity post;
 	
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	private UserEntity user;
 
 }

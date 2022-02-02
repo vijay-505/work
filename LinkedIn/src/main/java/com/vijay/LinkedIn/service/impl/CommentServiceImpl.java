@@ -40,11 +40,14 @@ public class CommentServiceImpl implements CommentService{
 	private CommentMapper commentMapper;
 
 	@Override
-	public ResponseEntity<CommentDto> createComment(@Valid CommentDto commentDto, int postId, String email) {
+	public ResponseEntity<CommentDto> createComment(
+			@Valid CommentDto commentDto, int postId, String email) {
 		CommentEntity comment = modelMapper.map(commentDto, CommentEntity.class);
+		PostEntity post = postRepository.getById(postId);
 		comment.setDate(new Date());
-		comment.setPost(postRepository.getById(postId));
+		comment.setPost(post);
 		comment.setUser(userRepository.findByEmail(email).get());
+		post.setTotalComments(post.getComments().size()+1L);
 		commentRepository.save(comment);
 		return new ResponseEntity<>(
 				modelMapper.map(comment, CommentDto.class), HttpStatus.CREATED);
@@ -73,6 +76,7 @@ public class CommentServiceImpl implements CommentService{
 				post.getUser().getEmail().equals(email))) {
 			throw new PermissionDeniedException("you can't delete comment");
 		}
+		post.setTotalComments(post.getComments().size()-1L);
 		commentRepository.deleteById(commentId);
 		return new ResponseEntity<>("comment deleted successfully",HttpStatus.OK);
 	}
