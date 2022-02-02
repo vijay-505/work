@@ -14,8 +14,6 @@ public interface ConnectionRepository extends JpaRepository<ConnectionEntity, In
 	ConnectionEntity findByConnectionEmailAndUserEmail(
 			String receiverEmail, String senderEmail);
 
-//	List<ConnectionEntity> findByConnectionEmailAndStatus(String email, ConnectionStatus request);
-
 	List<ConnectionEntity> findByUserEmailAndStatus(
 			String senderEmail, ConnectionStatus accept);
 

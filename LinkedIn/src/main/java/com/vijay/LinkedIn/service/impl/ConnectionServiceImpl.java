@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.vijay.LinkedIn.dto.mapper.ConnectionMapper;
 import com.vijay.LinkedIn.dto.model.ConnectionDto;
@@ -48,10 +47,7 @@ public class ConnectionServiceImpl implements ConnectionService{
 		connection.setConnectionEmail(senderEmail);
 		connection.setUser(receiverUser);
 		connection.setStatus(ConnectionStatus.REQUEST);
-		String connectionUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-				.path("users/"+senderUser.getEmail())
-				.toUriString();
-		connection.setConnectionUrl(connectionUrl);
+		connection.setConnectionUrl(senderUser.getProfileUrl());
 		connectionRepository.save(connection);
 		return new ResponseEntity<>("Connection request sent.",
 				HttpStatus.CREATED);
@@ -84,10 +80,7 @@ public class ConnectionServiceImpl implements ConnectionService{
 		senderConnection.setConnectionEmail(receiverEmail);
 		senderConnection.setUser(senderUser);
 		senderConnection.setStatus(ConnectionStatus.ACCEPT);
-		String connectionUrl2 = ServletUriComponentsBuilder.fromCurrentContextPath()
-				.path("users/"+receiverUser.getEmail())
-				.toUriString();
-		senderConnection.setConnectionUrl(connectionUrl2);
+		senderConnection.setConnectionUrl(receiverUser.getProfileUrl());
 		
 		senderUser.setTotalConnections(senderUser.getConnections().size()+1L);
 		connectionRepository.save(senderConnection);

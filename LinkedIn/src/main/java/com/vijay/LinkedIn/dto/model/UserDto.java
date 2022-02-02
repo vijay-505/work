@@ -16,6 +16,7 @@ public class UserDto {
 	private String name;
 	private String about;
 	private String profileUrl;
+	private String profileImageUrl;
 	private Long totalConnections;
 //	private List<ConnectionDto> connections;
 //	private byte[] cover; 

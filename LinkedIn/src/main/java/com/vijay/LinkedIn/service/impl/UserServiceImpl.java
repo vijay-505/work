@@ -51,6 +51,10 @@ public class UserServiceImpl implements UserService{
 		if(optionalUser.isPresent()) {
 			throw new UserAlreadyExistsException("user already exist with: "+user.getEmail());
 		}
+		String profileUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+				.path("users/"+user.getEmail())
+				.toUriString();
+		user.setProfileUrl(profileUrl);
 		return new ResponseEntity<>(
 				modelMapper.map(userRepository.save(user), UserDto.class), 
 				HttpStatus.CREATED);
@@ -88,11 +92,11 @@ public class UserServiceImpl implements UserService{
 		} catch (IOException e) {
 			throw new FileIOException("problem with updating image");
 		}
-		String profileUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+		String profileImageUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
 				.path("users/"+user.getEmail()+"/")
 				.path("profile")
 				.toUriString();
-		user.setProfileUrl(profileUrl);
+		user.setProfileImageUrl(profileImageUrl);
 		return new ResponseEntity<>(
 				modelMapper.map(userRepository.save(user), UserDto.class), 
 				HttpStatus.OK);

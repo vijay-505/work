@@ -60,6 +60,17 @@ public class CustomizedExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		return new ResponseEntity(exceptionResponse,HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+
+	@ExceptionHandler(PermissionDeniedException.class)
+	public final ResponseEntity<Object> handlePermissionDeniedException
+	(Exception ex, WebRequest request){
+		
+		ExceptionResponse exceptionResponse = 
+				new ExceptionResponse(ex.getMessage(), 
+				request.getDescription(false));
+		
+		return new ResponseEntity(exceptionResponse,HttpStatus.FORBIDDEN);
+	}
 	
 //	@ExceptionHandler(RuntimeException.class)
 //	public final ResponseEntity<Object> handleRuntimeExceptions

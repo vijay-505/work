@@ -38,11 +38,15 @@ public class UserEntity {
 	private String name;
 	private String about;
 	private String profileUrl;
+	private String profileImageUrl;
 	@Lob
 	private byte[] profile;
 	@OneToMany(mappedBy="user", cascade=CascadeType.ALL)
 	private List<ConnectionEntity> connections = new ArrayList<>();
 	private long totalConnections;
+	
+	@OneToMany(mappedBy="user")
+	private List<PostEntity> posts = new ArrayList<>();
 	
 //	@Lob
 //	private byte[] cover; 
