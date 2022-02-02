@@ -3,6 +3,7 @@ package com.vijay.LinkedIn.entity;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -24,13 +25,13 @@ public class CommentEntity {
 	@Id
 	@GeneratedValue
 	private int commentId;
-	private Date createdDate;
+	private Date date;
 	private String content;
 	
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	private PostEntity post;
 	
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	private UserEntity user;	
 
 }

@@ -27,8 +27,10 @@ public class ConnectionEntity {
 	private int id;
 	private String connectionEmail;
 	private String connectionUrl;
+	
 	@ManyToOne(fetch=FetchType.LAZY)
 	private UserEntity user;
+	
 	@Enumerated(EnumType.STRING)
 	private ConnectionStatus status;
 	

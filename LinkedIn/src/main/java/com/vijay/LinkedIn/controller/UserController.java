@@ -3,6 +3,7 @@ package com.vijay.LinkedIn.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.vijay.LinkedIn.dto.model.ConnectionDto;
 import com.vijay.LinkedIn.dto.model.UserDto;
+import com.vijay.LinkedIn.dto.model.UserRequestDto;
 import com.vijay.LinkedIn.entity.UserEntity;
 import com.vijay.LinkedIn.service.UserService;
 
@@ -27,8 +29,8 @@ public class UserController {
 	private UserService userService;
 	
 	@PostMapping("/users")
-	public  ResponseEntity<UserDto> createUser(@RequestBody UserEntity user){
-		return userService.createUser(user);
+	public  ResponseEntity<UserDto> createUser(@Valid @RequestBody UserRequestDto userRequestDto){
+		return userService.createUser(userRequestDto);
 	}
 	
 	@GetMapping("/users/{email}")
@@ -38,9 +40,8 @@ public class UserController {
 	
 	@PutMapping("/users")
 	public ResponseEntity<UserDto> updateUser(@RequestParam MultipartFile profile,
-			@RequestParam MultipartFile cover,
 			HttpServletRequest request){
-		return userService.updateUser(profile,cover,request);
+		return userService.updateUser(profile,request);
 	}
 	
 	@GetMapping("/users/{email}/profile")

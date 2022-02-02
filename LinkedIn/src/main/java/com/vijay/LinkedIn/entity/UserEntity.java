@@ -29,12 +29,8 @@ public class UserEntity {
 	@Id
 	@GeneratedValue
 	private int id;
-	@NotNull
-	@Email
 	private String email;
-	@NotNull
 	private String password;
-	@NotNull
 	private String name;
 	private String about;
 	private String profileUrl;

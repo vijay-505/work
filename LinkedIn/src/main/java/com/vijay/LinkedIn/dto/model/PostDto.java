@@ -25,7 +25,7 @@ public class PostDto {
 	private String description;
 	private List<LinkDto> links;
 	private List<LikeEntity> likes;
-	private List<CommentEntity> comments; 
+	private List<CommentDto> comments; 
 	
 
 }

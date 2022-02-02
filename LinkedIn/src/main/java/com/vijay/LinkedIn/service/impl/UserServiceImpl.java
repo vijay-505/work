@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.vijay.LinkedIn.dto.mapper.ConnectionMapper;
 import com.vijay.LinkedIn.dto.model.ConnectionDto;
 import com.vijay.LinkedIn.dto.model.UserDto;
+import com.vijay.LinkedIn.dto.model.UserRequestDto;
 import com.vijay.LinkedIn.entity.ConnectionEntity;
 import com.vijay.LinkedIn.entity.ConnectionStatus;
 import com.vijay.LinkedIn.entity.UserEntity;
@@ -46,7 +48,8 @@ public class UserServiceImpl implements UserService{
 	private ConnectionMapper connectionMapper;
 
 	@Override
-	public ResponseEntity<UserDto> createUser(UserEntity user) {
+	public ResponseEntity<UserDto> createUser(UserRequestDto userRequestDto) {
+		UserEntity user = modelMapper.map(userRequestDto, UserEntity.class);
 		Optional<UserEntity> optionalUser = userRepository.findByEmail(user.getEmail());
 		if(optionalUser.isPresent()) {
 			throw new UserAlreadyExistsException("user already exist with: "+user.getEmail());
@@ -73,7 +76,7 @@ public class UserServiceImpl implements UserService{
 
 
 	@Override
-	public ResponseEntity<UserDto> updateUser(MultipartFile profile, MultipartFile cover, HttpServletRequest request) {
+	public ResponseEntity<UserDto> updateUser(MultipartFile profile, HttpServletRequest request) {
 		String email = request.getParameter("email");
 		Optional<UserEntity> optionalUser = userRepository.findByEmail(email);
 		if(!optionalUser.isPresent()) {
