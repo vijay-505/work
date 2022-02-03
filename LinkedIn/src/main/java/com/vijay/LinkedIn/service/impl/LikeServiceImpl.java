@@ -1,5 +1,6 @@
 package com.vijay.LinkedIn.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,6 +57,7 @@ public class LikeServiceImpl implements LikeService{
 			like.setPost(post);
 			like.setUser(userRepository.findByEmail(email).get());
 			like.setReact(React.LIKE);
+			like.setDate(new Date());
 			post.setTotalLikes(post.getLikes().size()+1L);
 			likeRepository.save(like);
 			return new ResponseEntity<>("post liked.",HttpStatus.CREATED);
@@ -72,6 +74,7 @@ public class LikeServiceImpl implements LikeService{
 			throw new PermissionDeniedException("you can't update like");
 		}
 		like.setReact(likeDto.getReact());
+		like.setDate(new Date());
 		likeRepository.save(like);
 		return new ResponseEntity<>("post reaction changed.",HttpStatus.OK);
 	}

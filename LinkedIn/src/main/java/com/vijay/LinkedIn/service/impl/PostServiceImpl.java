@@ -12,10 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.vijay.LinkedIn.dto.mapper.PostMapper;
+import com.vijay.LinkedIn.dto.model.ActivityDto;
 import com.vijay.LinkedIn.dto.model.PostDto;
 import com.vijay.LinkedIn.dto.model.PostRequestDto;
+import com.vijay.LinkedIn.entity.CommentEntity;
+import com.vijay.LinkedIn.entity.LikeEntity;
 import com.vijay.LinkedIn.entity.LinkEntity;
 import com.vijay.LinkedIn.entity.PostEntity;
+import com.vijay.LinkedIn.entity.UserEntity;
 import com.vijay.LinkedIn.exception.PermissionDeniedException;
 import com.vijay.LinkedIn.repository.LinkRepository;
 import com.vijay.LinkedIn.repository.PostRepository;
@@ -120,6 +124,46 @@ public class PostServiceImpl implements PostService{
 		}
 		postRepository.deleteById(postId);
 		return new ResponseEntity<>("post deleted successfully",HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<List<ActivityDto>> retrieveAllActivityPost(String email) {
+		UserEntity user = userRepository.findByEmail(email).get();
+		List<PostEntity> posts = user.getPosts();
+		List<ActivityDto> activityDtos = 
+				postMapper.toActivityDtosFromPosts(posts, "posted", user.getEmail());
+		List<CommentEntity> comments = user.getComments();
+		List<ActivityDto> activityDtosFromComments = 
+				postMapper.toActivityDtosFromComments(comments, "commented", user.getEmail());
+		activityDtos.addAll(activityDtosFromComments);
+		List<LikeEntity> likes = user.getLikes();
+		List<ActivityDto> activityDtosFromLikes = 
+				postMapper.toActivityDtosFromLikes(likes, "liked", user.getEmail());
+		activityDtos.addAll(activityDtosFromLikes);
+		
+		List<ActivityDto> sortedActivityDtos = postMapper.sortedActivityDtos(activityDtos);
+		
+		return new ResponseEntity<>(sortedActivityDtos,HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<List<ActivityDto>> retrieveAllActivityHomePage(String email) {
+		UserEntity user = userRepository.findByEmail(email).get();
+		
+		List<ActivityDto> activityDtos = new ArrayList<>();
+		List<ActivityDto> UserActivityDtos = 
+				postMapper.toActivityDtosFromPosts(user.getPosts(), "posted", user.getEmail());
+		activityDtos.addAll(UserActivityDtos);
+		
+		user.getConnections().forEach(connection -> {
+			List<ActivityDto> connectionActivityDtos = 
+					retrieveAllActivityPost(connection.getConnectionEmail()).getBody();
+			activityDtos.addAll(connectionActivityDtos);
+		});
+		
+		List<ActivityDto> sortedActivityDtos = 
+				postMapper.sortedActivityDtos(activityDtos);
+		return new ResponseEntity<>(sortedActivityDtos,HttpStatus.OK);
 	}
 
 }

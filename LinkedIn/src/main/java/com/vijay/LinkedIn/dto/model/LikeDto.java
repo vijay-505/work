@@ -1,5 +1,7 @@
 package com.vijay.LinkedIn.dto.model;
 
+import java.util.Date;
+
 import com.vijay.LinkedIn.entity.React;
 
 import lombok.Getter;
@@ -13,6 +15,7 @@ public class LikeDto {
 	
 	private int likeId;
 	private React react;
+	private Date date;
 	private String userProfileUrl;
 
 }

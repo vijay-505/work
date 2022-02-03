@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vijay.LinkedIn.dto.model.ActivityDto;
 import com.vijay.LinkedIn.dto.model.PostDto;
 import com.vijay.LinkedIn.dto.model.PostRequestDto;
 import com.vijay.LinkedIn.service.PostService;
@@ -50,6 +51,16 @@ public class PostController {
 	public ResponseEntity<String> deletePost(@PathVariable String email,
 			@PathVariable int postId){
 		return postService.deletePost(email, postId);
+	}
+	
+	@GetMapping("activity/users/{email}")
+	public ResponseEntity<List<ActivityDto>> retrieveAllActivityPost(@PathVariable String email){
+		return postService.retrieveAllActivityPost(email);
+	}
+	
+	@GetMapping("homepage/users/{email}")
+	public ResponseEntity<List<ActivityDto>> retrieveAllActivityHomePage(@PathVariable String email){
+		return postService.retrieveAllActivityHomePage(email);
 	}
 
 }

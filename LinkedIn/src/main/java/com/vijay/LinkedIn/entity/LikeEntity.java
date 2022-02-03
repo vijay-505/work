@@ -1,5 +1,7 @@
 package com.vijay.LinkedIn.entity;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -25,6 +27,7 @@ public class LikeEntity {
 	@Id
 	@GeneratedValue
 	private int likeId;
+	private Date date;
 	@Enumerated(EnumType.STRING)
 	private React react;
 	

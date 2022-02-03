@@ -41,6 +41,12 @@ public class UserEntity {
 	@OneToMany(mappedBy="user")
 	private List<PostEntity> posts = new ArrayList<>();
 	
+	@OneToMany(mappedBy="user")
+	private List<CommentEntity> comments = new ArrayList<>();
+	
+	@OneToMany(mappedBy="user")
+	private List<LikeEntity> likes = new ArrayList<>();
+	
 //	@Lob
 //	private byte[] cover; 
 	//job,company, posts, connections
