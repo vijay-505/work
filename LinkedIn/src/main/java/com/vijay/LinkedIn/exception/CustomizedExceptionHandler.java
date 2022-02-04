@@ -72,27 +72,27 @@ public class CustomizedExceptionHandler extends ResponseEntityExceptionHandler{
 		return new ResponseEntity(exceptionResponse,HttpStatus.FORBIDDEN);
 	}
 	
-//	@ExceptionHandler(RuntimeException.class)
-//	public final ResponseEntity<Object> handleRuntimeExceptions
-//	(Exception ex, WebRequest request){
-//		
-//		ExceptionResponse exceptionResponse = 
-//				new ExceptionResponse(ex.getMessage(), 
-//				request.getDescription(false));
-//		
-//		return new ResponseEntity(exceptionResponse,HttpStatus.OK);
-//	}
-//	
-//	@ExceptionHandler(Exception.class)
-//	public final ResponseEntity<Object> handleAllExceptions
-//	(Exception ex, WebRequest request){
-//		
-//		ExceptionResponse exceptionResponse = 
-//				new ExceptionResponse(ex.getMessage(), 
-//				request.getDescription(false));
-//		
-//		return new ResponseEntity(exceptionResponse,HttpStatus.INTERNAL_SERVER_ERROR);
-//	}
+	@ExceptionHandler(AlreadyAppliedException.class)
+	public final ResponseEntity<Object> handleAlreadyAppliedException
+	(Exception ex, WebRequest request){
+		
+		ExceptionResponse exceptionResponse = 
+				new ExceptionResponse(ex.getMessage(), 
+				request.getDescription(false));
+		
+		return new ResponseEntity(exceptionResponse,HttpStatus.OK);
+	}
+	
+	@ExceptionHandler(AlreadySavedException.class)
+	public final ResponseEntity<Object> handleAlreadySavedException
+	(Exception ex, WebRequest request){
+		
+		ExceptionResponse exceptionResponse = 
+				new ExceptionResponse(ex.getMessage(), 
+				request.getDescription(false));
+		
+		return new ResponseEntity(exceptionResponse,HttpStatus.OK);
+	}
 	
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(

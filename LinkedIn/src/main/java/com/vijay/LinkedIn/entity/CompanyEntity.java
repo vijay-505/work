@@ -1,9 +1,13 @@
 package com.vijay.LinkedIn.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -30,6 +34,10 @@ public class CompanyEntity {
 	@Lob
 	private byte[] profile;
 	private String about;
+	
+	@OneToMany(mappedBy="company")
+	private List<JobEntity> jobs = new ArrayList<>();
+	
 	//employees(people), locations, posts,jobs
 
 }

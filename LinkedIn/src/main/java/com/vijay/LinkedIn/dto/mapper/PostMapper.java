@@ -85,7 +85,7 @@ public class PostMapper {
 			
 			if(activityDto.getReason().equals("posted")) {
 				map.put(activityDto,
-						activityDto.getPostDto().getCreatedDate());
+						activityDto.getPostDto().getDate());
 			}
 			else if(activityDto.getReason().equals("commented")) {
 				map.put(activityDto,

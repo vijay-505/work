@@ -1,11 +1,12 @@
 package com.vijay.LinkedIn.entity;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -23,30 +24,32 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="post")
-public class PostEntity {
-	
+@Table(name="job")
+public class JobEntity {
+
 	@Id
 	@GeneratedValue
-	private int postId;
-	private boolean edited;
+	private int jobId;
+	private String title;
+	private String location;
 	private Date date;
-	private String description;
-	private long totalLikes;
-	private String likesUrl;
-	private long totalComments;
-	private String commentsUrl;
 	
-	@OneToMany(mappedBy="post",cascade=CascadeType.REMOVE)
-	private List<LinkEntity> links = new ArrayList<>();;
+	@ManyToOne(fetch=FetchType.LAZY)
+	private CompanyEntity company;
+	
+	@Enumerated(EnumType.STRING)
+	private JobType type;
+	
+	private String description;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	private UserEntity user;
 	
-	@OneToMany(mappedBy="post",cascade=CascadeType.REMOVE)
-	private List<LikeEntity> likes = new ArrayList<>();
+	@OneToMany(mappedBy="job",cascade=CascadeType.REMOVE)
+	private List<AppliedJobEntity> appliedJobs;
 	
-	@OneToMany(mappedBy="post",cascade=CascadeType.REMOVE)
-	private List<CommentEntity> comments = new ArrayList<>();
-
+	@OneToMany(mappedBy="job",cascade=CascadeType.REMOVE)
+	private List<SavedJobEntity> savedJobs;
+	
 }
+

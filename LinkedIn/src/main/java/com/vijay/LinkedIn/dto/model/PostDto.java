@@ -13,10 +13,10 @@ import lombok.Setter;
 public class PostDto {
 	
 	private int postId;
+	private boolean edited;
 	private String userEmail;
 	private String userProfileUrl;
-	private Date createdDate;
-	private Date updatedDate;
+	private Date date;
 	private String description;
 	private List<LinkDto> links;
 	private long totalLikes;

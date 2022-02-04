@@ -48,7 +48,8 @@ public class PostServiceImpl implements PostService{
 	public ResponseEntity<PostDto> createPost(PostRequestDto postRequestDto, String email) {
 		PostEntity post = modelMapper.map(postRequestDto, PostEntity.class);
 		post.setUser(userRepository.findByEmail(email).get());
-		post.setCreatedDate(new Date());
+		post.setDate(new Date());
+		post.setEdited(false);
 		postRepository.save(post);
 
 		String likesUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -96,7 +97,8 @@ public class PostServiceImpl implements PostService{
 			throw new PermissionDeniedException("You can't update post.");
 		}
 		post.setDescription(postRequestDto.getDescription());
-		post.setUpdatedDate(new Date());
+		post.setDate(new Date());
+		post.setEdited(true);
 		linkRepository.deleteAll(post.getLinks());
 		post.setLinks(null);
 		List<LinkEntity> links = new ArrayList<>();
