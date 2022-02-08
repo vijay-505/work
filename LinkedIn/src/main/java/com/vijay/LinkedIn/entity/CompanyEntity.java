@@ -1,6 +1,5 @@
 package com.vijay.LinkedIn.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -36,7 +35,10 @@ public class CompanyEntity {
 	private String about;
 	
 	@OneToMany(mappedBy="company")
-	private List<JobEntity> jobs = new ArrayList<>();
+	private List<JobEntity> jobs;
+	
+	@OneToMany(mappedBy="company")
+	private List<FollowerEntity> followers;
 	
 	//employees(people), locations, posts,jobs
 

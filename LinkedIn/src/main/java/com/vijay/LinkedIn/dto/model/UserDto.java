@@ -1,5 +1,7 @@
 package com.vijay.LinkedIn.dto.model;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +18,7 @@ public class UserDto {
 	private String profileUrl;
 	private String profileImageUrl;
 	private Long totalConnections;
+	private List<ExperienceDto> experiences;
 //	private List<ConnectionDto> connections;
 //	private byte[] cover; 
 	

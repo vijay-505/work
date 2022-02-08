@@ -80,7 +80,7 @@ public class CustomizedExceptionHandler extends ResponseEntityExceptionHandler{
 				new ExceptionResponse(ex.getMessage(), 
 				request.getDescription(false));
 		
-		return new ResponseEntity(exceptionResponse,HttpStatus.OK);
+		return new ResponseEntity(exceptionResponse,HttpStatus.CONFLICT);
 	}
 	
 	@ExceptionHandler(AlreadySavedException.class)
@@ -91,7 +91,29 @@ public class CustomizedExceptionHandler extends ResponseEntityExceptionHandler{
 				new ExceptionResponse(ex.getMessage(), 
 				request.getDescription(false));
 		
-		return new ResponseEntity(exceptionResponse,HttpStatus.OK);
+		return new ResponseEntity(exceptionResponse,HttpStatus.CONFLICT);
+	}
+	
+	@ExceptionHandler(FollowerAlreadyExistException.class)
+	public final ResponseEntity<Object> handleFollowerAlreadyExistException
+	(Exception ex, WebRequest request){
+		
+		ExceptionResponse exceptionResponse = 
+				new ExceptionResponse(ex.getMessage(), 
+				request.getDescription(false));
+		
+		return new ResponseEntity(exceptionResponse,HttpStatus.CONFLICT);
+	}
+	
+	@ExceptionHandler(FollowerNotExistException.class)
+	public final ResponseEntity<Object> handleFollowerNotExistException
+	(Exception ex, WebRequest request){
+		
+		ExceptionResponse exceptionResponse = 
+				new ExceptionResponse(ex.getMessage(), 
+				request.getDescription(false));
+		
+		return new ResponseEntity(exceptionResponse,HttpStatus.NOT_FOUND);
 	}
 	
 	@Override

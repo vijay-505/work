@@ -156,6 +156,15 @@ public class JobServiceImpl implements JobService{
 				.header(HttpHeaders.CONTENT_DISPOSITION, "inline;fileName="+"resume") 
 				.body(appliedJob.getResume());
 	}
+	
+	@Override
+	public ResponseEntity<AppliedJobDto> retriveAppliedJob(int jobId, String email) {
+		AppliedJobEntity appliedJob = 
+				appliedJobRepository.findByUserEmailAndJobJobId(email,jobId).get();
+		return new ResponseEntity<>(
+				modelMapper.map(appliedJob, AppliedJobDto.class),
+				HttpStatus.OK);
+	}
 
 	@Override
 	public ResponseEntity<List<AppliedJobDto>> retriveAllApplication(int jobId) {

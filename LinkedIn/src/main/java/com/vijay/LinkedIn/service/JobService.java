@@ -27,6 +27,8 @@ public interface JobService {
 			HttpServletRequest request);
 
 	ResponseEntity<byte[]> retriveUserResume(int jobId, String email);
+	
+	ResponseEntity<AppliedJobDto> retriveAppliedJob(int jobId, String email);
 
 	ResponseEntity<List<AppliedJobDto>> retriveAllApplication(int jobId);
 

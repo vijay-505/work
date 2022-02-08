@@ -1,5 +1,6 @@
 package com.vijay.LinkedIn.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,5 +12,7 @@ import com.vijay.LinkedIn.entity.CompanyEntity;
 public interface CompanyRepository extends JpaRepository<CompanyEntity, Integer>{
 
 	Optional<CompanyEntity> findByEmail(String email);
+
+	List<CompanyEntity> findByNameContains(String name);
 
 }

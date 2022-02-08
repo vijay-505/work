@@ -1,6 +1,5 @@
 package com.vijay.LinkedIn.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -35,29 +34,35 @@ public class UserEntity {
 	@Lob
 	private byte[] profile;
 	@OneToMany(mappedBy="user")
-	private List<ConnectionEntity> connections = new ArrayList<>();
+	private List<ConnectionEntity> connections;
 	private long totalConnections;
 	
 	@OneToMany(mappedBy="user")
-	private List<PostEntity> posts = new ArrayList<>();
+	private List<PostEntity> posts;
 	
 	@OneToMany(mappedBy="user")
-	private List<CommentEntity> comments = new ArrayList<>();
+	private List<CommentEntity> comments;
 	
 	@OneToMany(mappedBy="user")
-	private List<LikeEntity> likes = new ArrayList<>();
+	private List<LikeEntity> likes;
 	
 	@OneToMany(mappedBy="user")
-	private List<JobEntity> jobs = new ArrayList<>();
+	private List<JobEntity> jobs;
 	
 	@OneToMany(mappedBy="user")
-	private List<AppliedJobEntity> appliedJobs = new ArrayList<>();
+	private List<AppliedJobEntity> appliedJobs;
 	
 	@OneToMany(mappedBy="user")
 	private List<SavedJobEntity> savedJobs;
 	
+	@OneToMany(mappedBy="user")
+	private List<ExperienceEntity> experiences;
+	
+	@OneToMany(mappedBy="user")
+	private List<FollowerEntity> followers;
+	
 //	@Lob
 //	private byte[] cover; 
-	//job,company
+	//company
 
 }

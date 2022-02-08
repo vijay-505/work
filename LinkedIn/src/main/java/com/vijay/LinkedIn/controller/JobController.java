@@ -68,6 +68,13 @@ public class JobController {
 		return jobService.retriveUserResume(jobId, email);
 	}
 	
+	@GetMapping("/jobs/{jobId}/users/{email}/applied")
+	public ResponseEntity<AppliedJobDto> retriveAppliedJob(
+			@PathVariable int jobId,
+			@PathVariable String email){
+		return jobService.retriveAppliedJob(jobId, email);
+	}
+	
 	@GetMapping("/jobs/{jobId}/users")
 	public ResponseEntity<List<AppliedJobDto>> retriveAllApplication(
 			@PathVariable int jobId){

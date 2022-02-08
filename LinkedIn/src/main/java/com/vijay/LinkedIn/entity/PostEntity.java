@@ -1,6 +1,5 @@
 package com.vijay.LinkedIn.entity;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -38,15 +37,15 @@ public class PostEntity {
 	private String commentsUrl;
 	
 	@OneToMany(mappedBy="post",cascade=CascadeType.REMOVE)
-	private List<LinkEntity> links = new ArrayList<>();;
+	private List<LinkEntity> links;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	private UserEntity user;
 	
 	@OneToMany(mappedBy="post",cascade=CascadeType.REMOVE)
-	private List<LikeEntity> likes = new ArrayList<>();
+	private List<LikeEntity> likes;
 	
 	@OneToMany(mappedBy="post",cascade=CascadeType.REMOVE)
-	private List<CommentEntity> comments = new ArrayList<>();
+	private List<CommentEntity> comments;
 
 }

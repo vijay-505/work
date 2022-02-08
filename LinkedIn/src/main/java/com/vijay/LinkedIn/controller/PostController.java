@@ -2,6 +2,8 @@ package com.vijay.LinkedIn.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,7 +26,7 @@ public class PostController {
 	private PostService postService;
 	
 	@PostMapping("/posts/users/{email}")
-	public ResponseEntity<PostDto> createPost(@RequestBody PostRequestDto postRequestDto,
+	public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostRequestDto postRequestDto,
 			@PathVariable String email){
 		return postService.createPost(postRequestDto, email);
 	}
@@ -41,7 +43,7 @@ public class PostController {
 	
 	@PutMapping("/posts/{postId}/users/{email}")
 	public ResponseEntity<PostDto> updatePost(
-			@RequestBody PostRequestDto postRequestDto,
+			@Valid @RequestBody PostRequestDto postRequestDto,
 			@PathVariable String email,
 			@PathVariable int postId){
 		return postService.updatePost(postRequestDto, email, postId);

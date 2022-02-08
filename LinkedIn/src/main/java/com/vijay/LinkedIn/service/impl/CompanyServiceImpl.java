@@ -1,6 +1,7 @@
 package com.vijay.LinkedIn.service.impl;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,10 +16,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.vijay.LinkedIn.dto.mapper.FollowerMapper;
 import com.vijay.LinkedIn.dto.model.CompanyDto;
 import com.vijay.LinkedIn.dto.model.CompanyRequestDto;
+import com.vijay.LinkedIn.dto.model.FollowerDto;
 import com.vijay.LinkedIn.entity.CompanyEntity;
+import com.vijay.LinkedIn.entity.FollowerEntity;
+import com.vijay.LinkedIn.entity.UserEntity;
+import com.vijay.LinkedIn.exception.FollowerAlreadyExistException;
+import com.vijay.LinkedIn.exception.FollowerNotExistException;
 import com.vijay.LinkedIn.repository.CompanyRepository;
+import com.vijay.LinkedIn.repository.FollowerRepository;
+import com.vijay.LinkedIn.repository.UserRepository;
 import com.vijay.LinkedIn.service.CompanyService;
 
 @Service
@@ -28,7 +37,16 @@ public class CompanyServiceImpl implements CompanyService{
 	private CompanyRepository companyRepository; 
 	
 	@Autowired
+	private UserRepository userRepository; 
+	
+	@Autowired
+	private FollowerRepository followerRepository; 
+	
+	@Autowired
 	private ModelMapper modelMapper;
+	
+	@Autowired
+	private FollowerMapper followerMapper;
 
 	@Override
 	public ResponseEntity<CompanyDto> createCompany(CompanyRequestDto companyRequestDto) {
@@ -93,6 +111,52 @@ public class CompanyServiceImpl implements CompanyService{
 				.contentType(MediaType.parseMediaType(mimeType))
 				.header(HttpHeaders.CONTENT_DISPOSITION, "inline;fileName="+"profile") 
 				.body(company.getProfile());
+	}
+
+	@Override
+	public ResponseEntity<FollowerDto> createFollower(
+			String companyEmail, String userEmail) {
+		Optional<FollowerEntity> optinalFollower = 
+				followerRepository.findByUserEmailAndCompanyEmail(userEmail, companyEmail);
+		if(optinalFollower.isPresent()) {
+			throw new FollowerAlreadyExistException("you already follow this company");
+		}
+		FollowerEntity follower = new FollowerEntity();
+		CompanyEntity company = companyRepository.findByEmail(companyEmail).get();
+		UserEntity user = userRepository.findByEmail(userEmail).get();
+		follower.setCompany(company);
+		follower.setUser(user);
+		followerRepository.save(follower);
+		return new ResponseEntity<>(
+				modelMapper.map(followerRepository.save(follower), FollowerDto.class),
+				HttpStatus.CREATED);
+	}
+
+	@Override
+	public ResponseEntity<String> removeFollower(String companyEmail, String userEmail) {
+		FollowerEntity follower = 
+				followerRepository.findByUserEmailAndCompanyEmail(userEmail, companyEmail).get();
+		followerRepository.deleteById(follower.getId());
+		return new ResponseEntity<>("company unfollowed",HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<FollowerDto> retrieveFollower(String companyEmail, String userEmail) {
+		Optional<FollowerEntity> optionalFollower = 
+				followerRepository.findByUserEmailAndCompanyEmail(userEmail, companyEmail);
+		if(!optionalFollower.isPresent()) {
+			throw new FollowerNotExistException("user not follow this company");
+		}
+		return new ResponseEntity<>(
+				modelMapper.map(optionalFollower.get(), FollowerDto.class),
+				HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<List<FollowerDto>> retrieveAllFollower(String companyEmail) {
+		CompanyEntity company = companyRepository.findByEmail(companyEmail).get();
+		List<FollowerDto> followerDtos = followerMapper.toFollowerDtos(company.getFollowers());
+		return new ResponseEntity<>(followerDtos,HttpStatus.OK);
 	}
 
 }
