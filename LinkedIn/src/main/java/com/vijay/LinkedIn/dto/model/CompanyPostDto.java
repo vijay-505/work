@@ -10,14 +10,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PostDto {
+public class CompanyPostDto {
 	
 	private int postId;
 	private boolean edited;
 	private String companyEmail;
 	private String companyProfileUrl;
-	private String userEmail;
-	private String userProfileUrl;
 	private Date date;
 	private String description;
 	private List<LinkDto> links;
@@ -28,3 +26,4 @@ public class PostDto {
 	
 
 }
+

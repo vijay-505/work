@@ -40,6 +40,7 @@ public class CompanyEntity {
 	@OneToMany(mappedBy="company")
 	private List<FollowerEntity> followers;
 	
-	//employees(people), locations, posts,jobs
+	@OneToMany(mappedBy="company")
+	private List<PostEntity> posts;
 
 }

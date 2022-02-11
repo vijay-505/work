@@ -25,4 +25,16 @@ public interface PostService {
 
 	ResponseEntity<List<ActivityDto>> retrieveAllActivityHomePage(String email);
 
+	ResponseEntity<PostDto> createCompanyPost(
+			PostRequestDto postRequestDto, String email);
+
+	ResponseEntity<List<PostDto>> retrieveCompanyAllPost(String email);
+
+	ResponseEntity<PostDto> updateCompanyPost(
+			PostRequestDto postRequestDto, String email, int postId);
+
+	ResponseEntity<String> deleteCompanyPost(String email, int postId);
+
+	ResponseEntity<List<ActivityDto>> retrieveCompanyAllActivityPost(String email);
+
 }

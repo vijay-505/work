@@ -16,11 +16,13 @@ import com.vijay.LinkedIn.dto.model.ActivityDto;
 import com.vijay.LinkedIn.dto.model.PostDto;
 import com.vijay.LinkedIn.dto.model.PostRequestDto;
 import com.vijay.LinkedIn.entity.CommentEntity;
+import com.vijay.LinkedIn.entity.CompanyEntity;
 import com.vijay.LinkedIn.entity.LikeEntity;
 import com.vijay.LinkedIn.entity.LinkEntity;
 import com.vijay.LinkedIn.entity.PostEntity;
 import com.vijay.LinkedIn.entity.UserEntity;
 import com.vijay.LinkedIn.exception.PermissionDeniedException;
+import com.vijay.LinkedIn.repository.CompanyRepository;
 import com.vijay.LinkedIn.repository.LinkRepository;
 import com.vijay.LinkedIn.repository.PostRepository;
 import com.vijay.LinkedIn.repository.UserRepository;
@@ -34,6 +36,9 @@ public class PostServiceImpl implements PostService{
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private CompanyRepository companyRepository;
 	
 	@Autowired
 	private LinkRepository linkRepository;
@@ -60,7 +65,7 @@ public class PostServiceImpl implements PostService{
 				.path("posts/"+post.getPostId()+"/comments")
 				.toUriString();
 		post.setCommentsUrl(commentUrl);
-		List<LinkEntity> links = post.getLinks();
+		List<LinkEntity> links = new ArrayList<>();
 		for(String user: postRequestDto.getUsers()) {
 			String profileUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
 					.path("users/"+user)
@@ -163,8 +168,103 @@ public class PostServiceImpl implements PostService{
 			activityDtos.addAll(connectionActivityDtos);
 		});
 		
+		user.getFollowers().forEach(follower -> {
+			List<ActivityDto> companyActicityDtos = 
+					retrieveCompanyAllActivityPost(follower.getCompany().getEmail()).getBody();
+			activityDtos.addAll(companyActicityDtos);
+		});
+		
 		List<ActivityDto> sortedActivityDtos = 
 				postMapper.sortedActivityDtos(activityDtos);
+		return new ResponseEntity<>(sortedActivityDtos,HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<PostDto> createCompanyPost(PostRequestDto postRequestDto, String email) {
+		PostEntity post = modelMapper.map(postRequestDto, PostEntity.class);
+		post.setCompany(companyRepository.findByEmail(email).get());
+		post.setDate(new Date());
+		post.setEdited(false);
+		postRepository.save(post);
+
+		String likesUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+				.path("posts/"+post.getPostId()+"/likes")
+				.toUriString();
+		post.setLikesUrl(likesUrl);
+		String commentUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+				.path("posts/"+post.getPostId()+"/comments")
+				.toUriString();
+		post.setCommentsUrl(commentUrl);
+		List<LinkEntity> links = new ArrayList<>();
+		for(String user: postRequestDto.getUsers()) {
+			String profileUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+					.path("users/"+user)
+					.toUriString();
+			LinkEntity link = new LinkEntity();
+			link.setLink(profileUrl);
+			link.setPost(post);
+			linkRepository.save(link);
+			links.add(link);
+		}
+		post.setLinks(links);
+		return new ResponseEntity<>(
+				modelMapper.map(post, PostDto.class),HttpStatus.CREATED);
+	}
+
+	@Override
+	public ResponseEntity<List<PostDto>> retrieveCompanyAllPost(String email) {
+		return new ResponseEntity<>(
+				postMapper.toPostDtos(companyRepository.findByEmail(email).get().getPosts())
+				,HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<PostDto> updateCompanyPost(PostRequestDto postRequestDto, String email, int postId) {
+		PostEntity post = postRepository.getById(postId);
+		if(!post.getCompany().getEmail().equals(email)) {
+			throw new PermissionDeniedException("You can't update post.");
+		}
+		post.setDescription(postRequestDto.getDescription());
+		post.setDate(new Date());
+		post.setEdited(true);
+		linkRepository.deleteAll(post.getLinks());
+		post.setLinks(null);
+		List<LinkEntity> links = new ArrayList<>();
+		for(String user: postRequestDto.getUsers()) {
+			String profileUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+					.path("users/"+user)
+					.toUriString();
+			LinkEntity link = new LinkEntity();
+			link.setLink(profileUrl);
+			link.setPost(post);
+			linkRepository.save(link);
+			links.add(link);
+		}
+		post.setLinks(links);
+		postRepository.save(post);
+		return new ResponseEntity<>(
+				modelMapper.map(post, PostDto.class),HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<String> deleteCompanyPost(String email, int postId) {
+		PostEntity post = postRepository.getById(postId);
+		if(!post.getCompany().getEmail().equals(email)) {
+			throw new PermissionDeniedException("You can't delete post.");
+		}
+		postRepository.deleteById(postId);
+		return new ResponseEntity<>("post deleted successfully",HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<List<ActivityDto>> retrieveCompanyAllActivityPost(String email) {
+		CompanyEntity company = companyRepository.findByEmail(email).get();
+		List<PostEntity> posts = company.getPosts();
+		List<ActivityDto> activityDtos = 
+				postMapper.toActivityDtosFromPosts(posts, "posted", company.getEmail());
+		
+		List<ActivityDto> sortedActivityDtos = postMapper.sortedActivityDtos(activityDtos);
+		
 		return new ResponseEntity<>(sortedActivityDtos,HttpStatus.OK);
 	}
 

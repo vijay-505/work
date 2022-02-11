@@ -60,9 +60,5 @@ public class UserEntity {
 	
 	@OneToMany(mappedBy="user")
 	private List<FollowerEntity> followers;
-	
-//	@Lob
-//	private byte[] cover; 
-	//company
 
 }

@@ -42,6 +42,9 @@ public class PostEntity {
 	@ManyToOne(fetch=FetchType.LAZY)
 	private UserEntity user;
 	
+	@ManyToOne(fetch=FetchType.LAZY)
+	private CompanyEntity company;
+	
 	@OneToMany(mappedBy="post",cascade=CascadeType.REMOVE)
 	private List<LikeEntity> likes;
 	

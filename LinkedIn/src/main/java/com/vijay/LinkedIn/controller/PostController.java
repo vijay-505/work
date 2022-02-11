@@ -55,14 +55,44 @@ public class PostController {
 		return postService.deletePost(email, postId);
 	}
 	
-	@GetMapping("activity/users/{email}")
+	@GetMapping("/users/{email}/activity")
 	public ResponseEntity<List<ActivityDto>> retrieveAllActivityPost(@PathVariable String email){
 		return postService.retrieveAllActivityPost(email);
 	}
 	
-	@GetMapping("homepage/users/{email}")
+	@GetMapping("/users/{email}/homepage")
 	public ResponseEntity<List<ActivityDto>> retrieveAllActivityHomePage(@PathVariable String email){
 		return postService.retrieveAllActivityHomePage(email);
+	}
+	
+	@PostMapping("/posts/companies/{email}")
+	public ResponseEntity<PostDto> createCompanyPost(@Valid @RequestBody PostRequestDto postRequestDto,
+			@PathVariable String email){
+		return postService.createCompanyPost(postRequestDto, email);
+	}
+	
+	@GetMapping("/posts/companies/{email}")
+	public ResponseEntity<List<PostDto>> retrieveCompanyAllPost(@PathVariable String email){
+		return postService.retrieveCompanyAllPost(email);
+	}
+	
+	@PutMapping("/posts/{postId}/companies/{email}")
+	public ResponseEntity<PostDto> updateCompanyPost(
+			@Valid @RequestBody PostRequestDto postRequestDto,
+			@PathVariable String email,
+			@PathVariable int postId){
+		return postService.updateCompanyPost(postRequestDto, email, postId);
+	}
+	
+	@DeleteMapping("/posts/{postId}/companies/{email}")
+	public ResponseEntity<String> deleteCompanyPost(@PathVariable String email,
+			@PathVariable int postId){
+		return postService.deleteCompanyPost(email, postId);
+	}
+	
+	@GetMapping("/companies/{email}/activity")
+	public ResponseEntity<List<ActivityDto>> retrieveCompanyAllActivityPost(@PathVariable String email){
+		return postService.retrieveCompanyAllActivityPost(email);
 	}
 
 }

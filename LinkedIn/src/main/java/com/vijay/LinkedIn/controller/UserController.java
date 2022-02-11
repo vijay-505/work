@@ -45,13 +45,13 @@ public class UserController {
 		return userService.updateUser(userRequestDto, email);
 	}
 	
-	@PutMapping("/users/{email}/profile")
+	@PutMapping("/users/{email}/profileImage")
 	public ResponseEntity<UserDto> updateUserProfile(@RequestParam MultipartFile profile,
 			@PathVariable String email){
 		return userService.updateUserProfile(profile, email);
 	}
 	
-	@GetMapping("/users/{email}/profile")
+	@GetMapping("/users/{email}/profileImage")
 	public ResponseEntity<byte[]> checkProfile(@PathVariable String email,
 			HttpServletRequest request) {
 		return userService.checkProfile(email,request);
